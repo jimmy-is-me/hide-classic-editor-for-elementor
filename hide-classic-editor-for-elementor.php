@@ -3,7 +3,7 @@
  * Plugin Name:       Hide Classic Editor for Elementor Pages
  * Plugin URI:        https://wumetax.com
  * Description:       Elementor 頁面強制使用 Elementor 編輯器，防止客戶誤用 WordPress 一般編輯器造成跑版。
- * Version:           1.3.0
+ * Version:           1.3.1
  * Requires at least: 5.0
  * Requires PHP:      7.4
  * Author:            jimmy
@@ -96,6 +96,9 @@ function hcefe_fix_admin_bar_edit_link( $wp_admin_bar ) {
  */
 add_action( 'load-post.php', 'hcefe_redirect_classic_editor_to_elementor' );
 function hcefe_redirect_classic_editor_to_elementor() {
+    // 確保只在 admin 且非 AJAX 環境下執行，避免干擾 WooCommerce container
+    if ( ! is_admin() || wp_doing_ajax() ) return;
+
     $post_id = isset( $_GET['post'] ) ? intval( $_GET['post'] ) : 0;
     $action  = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 
